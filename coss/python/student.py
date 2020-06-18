@@ -1,10 +1,12 @@
 from tkinter import *
+import sqlite3
 import tkinter.messagebox
 from PIL import Image,ImageTk
 
 root = Tk()
-root.geometry('500x600')
-root.title("Student Registration Form")
+root.geometry('500x650')
+root.title("Registration Form")
+#root.config(background="white")
 
 
 def exitt():
@@ -21,29 +23,33 @@ fn=StringVar()
 ln=StringVar()
 dob=StringVar()
 var=StringVar()
-var_c1= "RHCSA" #checkbox 1
-var_c2 = "Python" #checkbox 2
+var_c1= "Java" #checkbox 1
+var_c2 = "python" #checkbox 2
 radio_var=StringVar() #radio var
 
-def printent():
-    first=fn.get()
-    sec=ln.get()
-    dob1=dob.get()
-    var1=var.get()
-    var3=var_c1
-    var3=var_c2
-    var4=radio_var.get()
-    
-    print(f"Your Fullname is, {first} {sec}")
-    print(f"Your Age is, {dob1}")
-    print(f"Your Country is, {var1}")
-    print(f"Your selected programming language is,{var3}")
-    print(f"Your gender is,{var4}")
-    tkinter.messagebox.showinfo("Congratulation !!","User is successfully signed up !!")
-    
-    
+# def abt():
+#     tkinter.messagebox.showinfo("Welcome","Menu Options")
 
-label_0 = Label(root, text="Student Registration form",relief="solid",width=25,font=("arial", 15,"bold"))
+def ext_1():
+    exit()
+
+
+def database(arg=None):
+   name1=fn.get() #first name
+   last1=ln.get() #last name
+   date=dob.get() #dob
+   country=var.get() #country
+   prog=var_c2 #prog lang
+   gender=radio_var.get() #gender radio button
+   conn = sqlite3.connect('Form.db')
+   with conn:
+      cursor=conn.cursor()
+   cursor.execute('CREATE TABLE IF NOT EXISTS Student (Name TEXT,Last TEXT,DOB TEXT,country TEXT,Programming TEXT,Gender Text)')
+   cursor.execute('INSERT INTO Student (Name,Last,DOB,country,Programming,Gender) VALUES(?,?,?,?,?,?)',(name1,last1,date,country,prog,gender,))
+   conn.commit()
+     
+
+label_0 = Label(root, text="Registration form",relief="solid",width=20,font=("arial", 19,"bold"))
 label_0.place(x=90,y=150)
 
 
@@ -78,13 +84,13 @@ droplist.config(width=15)
  
 droplist.place(x=238,y=370)
 
-label_4 = Label(root, text="Course :",width=20,font=("bold", 10))
-label_4.place(x=75,y=420)
+label_4 = Label(root, text="Prog Language :",width=20,font=("bold", 10))
+label_4.place(x=95,y=420)
 
 
-c1 = Checkbutton(root, text="RHCSA", variable=var_c1).place(x=235,y=420)   #check box 1
+c1 = Checkbutton(root, text="java", variable=var_c1).place(x=235,y=420)   #check box 1
 
-c2 = Checkbutton(root, text="python", variable=var_c2).place(x=305,y=420)  #check box 2
+c2 = Checkbutton(root, text="python", variable=var_c2).place(x=290,y=420)  #check box 2
 
 label_4 = Label(root, text="Gender :",width=20,font=("bold", 10))
 label_4.place(x=73,y=459)
@@ -98,7 +104,10 @@ label_0 = Label(root, text="DOB :",width=20,font=("bold",10))
 label_0.place(x=65,y=320)
 
 
-but_login=Button(root, text='Signup',width=12,bg='brown',fg='white',command=printent).place(x=130,y=515)
+but_login=Button(root, text='Signup',width=12,bg='brown',fg='white',command=database).place(x=130,y=515)
+root.bind("<Return>",database)
+
 but_quit=Button(root, text='Quit',width=12,bg='brown',fg='white',command=exitt).place(x=280,y=515)
+#but_login=Button(root,text="login",width=12,bg='brown',fg='white',command=second_win).place(x=208,y=560)
 
 root.mainloop()
